@@ -42,8 +42,12 @@ class IRCBot
 		until s.eof? 
 			msg = s.gets
 			puts msg
-			break if msg.include?("lunchbot exit") #to exit
 
+			#exits and closes the TCO connection
+			if msg.include?("lunchbot exit")
+				s.puts "QUIT Leavin!"
+				s.closes
+			end
 
 			if msg.include?(msg_prefix)
 
