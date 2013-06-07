@@ -23,9 +23,11 @@ class IRCBot
 		nick = "LunchBot"
 		channel = "#lunchbot"
 		join_command = "lunchbot join"
-		list_command = "lunchbot group"
+		leave_command = "lunchbot leave"
+		list_member_command = "lunchbot group"
+		list_rests_command = "lunchbot places"
 		go_command = "lunchbot go"
-		intro_msg = "Welcome to the amazing Lunchbot! Not sure what to eat? Join by typing '#{join_command} and we'll decide for you!"
+		intro_msg = "Welcome to the amazing Lunchbot! Not sure what to eat? Join by typing '#{join_command}' and we'll decide for you!"
 		msg_counter = 20
 		msg_prefix = "PRIVMSG #{channel} :"
 
@@ -40,7 +42,7 @@ class IRCBot
 		until s.eof? 
 			msg = s.gets
 			puts msg
-			break if msg.include?("exit me") #to exit
+			break if msg.include?("lunchbot exit") #to exit
 
 
 			if msg.include?(msg_prefix)
@@ -52,21 +54,23 @@ class IRCBot
 				msg_counter = 15
 			end
 
-				#joining lunchbox group
+				#joining lunchbot group
 				if msg.include?(join_command)
 					name = name_parse(msg)
 					if lb.group_names.include?(name)
 						s.puts msg_prefix + "#{name} has already joined"
 					else
 						lb.join(name)
-						s.puts msg_prefix + "#{name} has joined Lunchbot! Type #{list_command} to list all members, or #{go_command} to decide where to go"
+						s.puts msg_prefix + "#{name} has joined Lunchbot! Type '#{list_member_command}' to list all members, '#{list_rests_command}' to list all restaurants, or '#{go_command}' to decide where to go"
 					end
 
 				#listing all group members
-				elsif msg.include?(list_command)
+				elsif msg.include?(list_member_command)
 					lb.group_names.each_with_index do |mem, i|
 						s.puts "#{msg_prefix} [#{i+1}] #{mem}"
 					end
+
+				#final command to go to a place
 				elsif msg.include?(go_command)
 					name = name_parse(msg)
 					if lb.group_names.include?(name)
@@ -78,6 +82,23 @@ class IRCBot
 					elsif
 						s.puts msg_prefix + "#{name}, join the group if you want to go to lunch!"
 					end
+
+				#leaving lunchbot group
+				elsif msg.include?(leave_command)
+					name = name_parse(msg)
+					if lb.group_names.include?(name)
+						lb.leave(name)
+						s.puts msg_prefix + "#{name}, you are removed from the group."
+					else
+						s.puts msg_prefix + "#{name}, you aren't in the group."
+					end	
+
+				#listing restaurants
+				elsif msg.include?(list_rests_command)
+					lb.rest_names.each_with_index do |mem, i|
+						s.puts "#{msg_prefix} [#{i+1}] #{mem}"
+					end
+						
 				end
 			end
 

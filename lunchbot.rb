@@ -20,6 +20,12 @@ class Lunchbot
 		group << mem
 	end
 
+	def leave(name)
+		group.each do |mem|
+			group.delete(mem) if mem.name == name
+		end
+	end
+
 	#returns list of group names
 	def group_names
 		names = []
@@ -28,4 +34,13 @@ class Lunchbot
 		end
 		names
 	end
+
+	def rest_names
+		rests = []
+		restaurants.each do |mem|
+			rests << mem.name
+		end
+		rests
+	end
+	
 end
