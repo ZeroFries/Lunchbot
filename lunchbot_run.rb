@@ -50,17 +50,17 @@ class IRCBot
 			end
 
 			if msg.include?(msg_prefix)
+				name = name_parse(msg)
 
 			#repeats intro msg every 20 msgs to IRC
-			msg_counter -= 1
-			if msg_counter<=0
-				s.puts msg_prefix + intro_msg
-				msg_counter = 15
-			end
+				msg_counter -= 1
+				if msg_counter<=0
+					s.puts msg_prefix + intro_msg
+					msg_counter = 15
+				end
 
 				#joining lunchbot group
 				if msg.include?(join_command)
-					name = name_parse(msg)
 					if lb.group_names.include?(name)
 						s.puts msg_prefix + "#{name} has already joined"
 					else
@@ -76,20 +76,19 @@ class IRCBot
 
 				#final command to go to a place
 				elsif msg.include?(go_command)
-					name = name_parse(msg)
 					if lb.group_names.include?(name)
 						restaurant = random_restaurant(lb)
 						output_string = lb.group_names.join(', ')
 						s.puts msg_prefix + output_string + ": you guys are going to #{restaurant.name}. Bon appetit!"
 						s.puts msg_prefix + "Restaurant description: " + restaurant.description
 						s.puts msg_prefix + "Located at: " + restaurant.location
+						lb.group_names.each { |name| lb.leave(name) }
 					elsif
 						s.puts msg_prefix + "#{name}, join the group if you want to go to lunch!"
 					end
 
 				#leaving lunchbot group
 				elsif msg.include?(leave_command)
-					name = name_parse(msg)
 					if lb.group_names.include?(name)
 						lb.leave(name)
 						s.puts msg_prefix + "#{name}, you are removed from the group."
