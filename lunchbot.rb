@@ -12,7 +12,7 @@ class Lunchbot
 		banhmiboys = Restaurant.new("Banh Mi Boys", "Has amazing fusion Asian sandwiches.", "392 Queen St W")
 		village = Restaurant.new("Village by the Grange", "Food court with cheap, but decent food", "53 McCaul St")
 		pizzapizza = Restaurant.new("Pizza Pizza", "Pretty good pizza for a decent price", "228 Queen St W")
-		@restaurants = [] << mcDonalds << subway << burritoBoyz << smokespoutinerie << banhmiboys << village < pizzapizza
+		@restaurants = [] << mcDonalds << subway << burritoBoyz <<smokespoutinerie << banhmiboys << village << pizzapizza
 		@group = []
 	end
 
